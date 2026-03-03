@@ -10,12 +10,6 @@ public class DatabaseConnection {
     private static final String PASSWORD = "ADMIN@12345";
     
     private static Connection connection = null;
-    
-    /**
-     * Private constructor to prevent object instantiation.
-     */
-    private DatabaseConnection() {
-    }
 
     /**
      * Retrieves the active database connection or creates a new one if closed.
