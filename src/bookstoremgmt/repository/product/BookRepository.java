@@ -9,30 +9,50 @@ import java.util.List;
 import bookstoremgmt.model.product.Book;
 import bookstoremgmt.util.DatabaseConnection;
 
+/**
+ * BookRepository class handles all database operations related to Book entities, including adding, deleting, and updating books in the database. It ensures that operations on both the BM_Product and BM_Book tables are performed atomically to maintain data integrity.
+ * @author Nguyen Tran Duc Anh
+ */
 public class BookRepository {
-    private DatabaseConnection dataConnection = new DatabaseConnection();
-    private Connection connection;
+    private DatabaseConnection dataConnection = new DatabaseConnection(); // Initialize the DatabaseConnection object
+    private Connection connection; // Declare the Connection object
 
+    /**
+     * Establishes a connection to the database if not already connected.
+     * @throws SQLException
+     */
     public void connect() throws SQLException {
+        // Check if connection is null or closed before establishing a new connection
         if (connection == null || connection.isClosed()) {
             connection = dataConnection.getConnection();
         }
     }
 
+    /**
+     * Closes the database connection if it is open.
+     * @param book
+     * @throws SQLException
+     */
     public void addBook(Book book) throws SQLException {
         connection.setAutoCommit(false); // Start transaction
 
-        boolean bookInsertedToProductTable = insertBookToProductTable(book);
-        boolean bookInsertedToBookTable = insertBookToBookTable(book);
+        boolean bookInsertedToProductTable = insertBookToProductTable(book); // Insert into BM_Product table
+        boolean bookInsertedToBookTable = insertBookToBookTable(book); // Insert into BM_Book table
 
+        // If either insertion fails, rollback the transaction and throw an exception
         if (!bookInsertedToProductTable || !bookInsertedToBookTable) {
             connection.rollback(); // Rollback transaction if any insertion fails
-            throw new SQLDataException("Failed to add book with ID: " + book.getId());
+            throw new SQLDataException("Failed to add book with ID: " + book.getId()); // Throw an exception with the book ID for better debugging
         }
 
         connection.commit(); // Commit transaction if both insertions succeed
     }
 
+    /**
+     * Adds multiple books to the database in a single transaction. If any insertion fails, the entire transaction is rolled back to maintain data integrity.
+     * @param books
+     * @throws SQLException
+     */
     public void addBooks(List<Book> books) throws SQLException {
         connection.setAutoCommit(false); // Start transaction
 
