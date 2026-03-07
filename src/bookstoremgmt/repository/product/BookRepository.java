@@ -14,6 +14,9 @@ import bookstoremgmt.util.DatabaseConnection;
  */
 public class BookRepository {
     private DatabaseConnection dataConnection = new DatabaseConnection(); // Initialize the DatabaseConnection object
+    private String sqlInsert = "INSERT INTO BM_Book (product_id, author_id, publisher, year_published, language, description) VALUES (?, ?, ?, ?, ?, ?)"; // Prepare the SQL statement for inserting a book into the BM_Book table
+    private String sqlDelete = "DELETE FROM BM_Book WHERE product_id = ?"; // Prepare the SQL statement for deleting a book from the BM_Book table by its ID
+    private String sqlUpdate = "UPDATE BM_Book SET author_id = ?, publisher = ?, year_published = ?, language = ?, description = ? WHERE product_id = ?"; // Prepare the SQL statement for updating a book's specific details in the BM_Book table
 
     public BookRepository() {
     }
@@ -220,10 +223,8 @@ public class BookRepository {
      * @throws SQLException
      */
     private void insertBookToBookTable(Book book, Connection connection) throws SQLException {
-        // Prepare the SQL statement for inserting a book into the BM_Book table
-        String sql = "INSERT INTO BM_Book (product_id, author_id, publisher, year_published, language, description) VALUES (?, ?, ?, ?, ?, ?)";
         // Using try-with-resources to automatically close the PreparedStatement and prevent memory leaks, even if an exception occurs.
-        try (PreparedStatement query = connection.prepareStatement(sql)) {
+        try (PreparedStatement query = connection.prepareStatement(sqlInsert)) {
             // Set the parameters for the SQL query using the book's specific details
             query.setString(1, book.getId());
             query.setString(2, book.getAuthor().getId());
@@ -249,10 +250,8 @@ public class BookRepository {
      * @throws SQLException
      */
     private void insertBookToBookTable(List<Book> books, Connection connection) throws SQLException {
-        // Prepare the SQL statement for inserting multiple books into the BM_Book table
-        String sql = "INSERT INTO BM_Book (product_id, author_id, publisher, year_published, language, description) VALUES (?, ?, ?, ?, ?, ?)";
         // Using try-with-resources to automatically close the PreparedStatement and prevent memory leaks, even if an exception occurs.
-        try (PreparedStatement query = connection.prepareStatement(sql)) {
+        try (PreparedStatement query = connection.prepareStatement(sqlInsert)) {
             // Loop through the list of books and set the parameters for each book's specific details in the SQL query
             for (Book book : books) {
                 query.setString(1, book.getId());
@@ -332,10 +331,8 @@ public class BookRepository {
      * @throws SQLException
      */
     private void deleteBookFromBookTable(String bookId, Connection connection) throws SQLException {
-        // Prepare the SQL statement for deleting a book from the BM_Book table by its ID
-        String sql = "DELETE FROM BM_Book WHERE product_id = ?";
         // Using try-with-resources to automatically close the PreparedStatement and prevent memory leaks, even if an exception occurs.
-        try (PreparedStatement query = connection.prepareStatement(sql)) {
+        try (PreparedStatement query = connection.prepareStatement(sqlDelete)) {
             // Set the book ID as a parameter for the SQL query 
             query.setString(1, bookId);
 
@@ -352,10 +349,8 @@ public class BookRepository {
      * @throws SQLException
      */
     private void deleteBookFromBookTable(List<String> bookIds, Connection connection) throws SQLException {
-        // Prepare the SQL statement for deleting multiple books from the BM_Book table by their IDs
-        String sql = "DELETE FROM BM_Book WHERE product_id = ?";
         // Using try-with-resources to automatically close the PreparedStatement and prevent memory leaks, even if an exception occurs.
-        try (PreparedStatement query = connection.prepareStatement(sql)) {
+        try (PreparedStatement query = connection.prepareStatement(sqlDelete)) {
             // Loop through the list of book IDs and set the book ID as a parameter for each deletion in the SQL query
             for (String bookId : bookIds) {
                 query.setString(1, bookId);
@@ -417,10 +412,8 @@ public class BookRepository {
      * @throws SQLException
      */
     private void updateBookInBookTable(Book book, Connection connection) throws SQLException {
-        // Prepare the SQL statement for updating a book's specific details in the BM_Book table
-        String sql = "UPDATE BM_Book SET author_id = ?, publisher = ?, year_published = ?, language = ?, description = ? WHERE product_id = ?";
         // Using try-with-resources to automatically close the PreparedStatement and prevent memory leaks, even if an exception occurs.
-        try (PreparedStatement query = connection.prepareStatement(sql)) {
+        try (PreparedStatement query = connection.prepareStatement(sqlUpdate)) {
             // Set the parameters for the SQL query using the book's updated specific details
             query.setString(1, book.getAuthor().getId());
             query.setString(2, book.getPublisher());
