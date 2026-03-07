@@ -15,7 +15,6 @@ import bookstoremgmt.util.DatabaseConnection;
 public class BookRepository {
     private DatabaseConnection dataConnection = new DatabaseConnection(); // Initialize the DatabaseConnection object
 
-    
     public BookRepository() {
     }
 
