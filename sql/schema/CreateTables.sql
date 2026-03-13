@@ -1,24 +1,3 @@
--- Enable SQL Server Authentication (Mixed Mode)
-EXEC sys.xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'LoginMode', REG_DWORD, 2;
-GO
-
--- Create the Database named BookManager
-CREATE DATABASE BookManager;
-GO
-
--- Switch to the newly created Database
-USE BookManager;
-GO
-
--- Create SQL Login and User (Password matches the Java configuration)
-CREATE LOGIN BookManager WITH PASSWORD = 'ADMIN@12345';
-CREATE USER BookManager FOR LOGIN BookManager;
-GO
-
--- Grant full management permissions (db_owner role) to this user
-ALTER ROLE db_owner ADD MEMBER BookManager;
-GO
-
 CREATE TABLE BM_Account (
     account_id VARCHAR(10) PRIMARY KEY NOT NULL,
     name VARCHAR(255) NOT NULL,

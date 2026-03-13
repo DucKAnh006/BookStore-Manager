@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=BookManager;encrypt=true;trustServerCertificate=true;";
     private static final String USER = "BookManager";
-    private static final String PASSWORD = "ADMIN@12345";
+    private static final String PASSWORD = "BookStoremgmt-Secure_@_032026";
     
     private static Connection connection = null;
 
